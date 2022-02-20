@@ -85,7 +85,8 @@
     &.button__secondary::before, &.button__secondary::after {
         background-color: $grey;
     }
-    &:hover {
+    &:hover, &:focus {
+        outline: none;
         transform: translateY(-5px);
     }
 }

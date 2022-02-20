@@ -95,7 +95,7 @@ class CharList extends Component {
 const Item = (props) => {
     const {id, name, thumbnail, onCharSelected, selected} = props;
     return (
-        <li onClick={() => onCharSelected(id)} className={'char__item' + ((selected === id) ? ' char__item_selected' : '')} >
+        <li onFocus={() => onCharSelected(id)} tabIndex={0} onClick={() => onCharSelected(id)} className={'char__item' + ((selected === id) ? ' char__item_selected' : '')} >
             <img src={thumbnail} style={(thumbnail.includes('image_not_available')) ? {objectFit: "unset"} : {}} alt={name}/>
             <div className="char__name">{name}</div>
         </li>

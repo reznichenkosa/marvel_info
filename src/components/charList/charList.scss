@@ -7,6 +7,7 @@
         grid-template-columns: 650px 425px;
         column-gap: 25px;
         align-items: start;
+        position: relative;
     }
     &__grid {
         display: grid;
@@ -31,7 +32,8 @@
         &:hover {
             transform: translateY(-8px);
         }
-        &_selected {
+        &_selected, &:focus {
+            outline: none;
             box-shadow: 0 5px 20px $main-color;
             transform: translateY(-8px);
         }
