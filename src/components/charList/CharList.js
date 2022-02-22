@@ -1,95 +1,92 @@
-import { Component } from 'react/cjs/react.production.min';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './charList.scss';
 
-class CharList extends Component {
+const CharList = (props) => {
 
-    state = {
-        charList: [],
-        loading: true,
-        error: false,
-        newItemLoading: false,
-        offset: 210,
-    };
+    const [charList, setCharList] = useState([]),
+          [loading, setLoading] = useState(true),
+          [error, setError] = useState(false),
+          [newItemLoading, setNewItemLoading] = useState(false),
+          [offset, setOffset] = useState(210);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.onRequest();
-        window.addEventListener("scroll", this.onScroll);
+    // loading content on scroll
+
+    // useEffect(() => {
+    //     window.addEventListener("scroll", onScroll);
+    //     return () => {
+    //         window.removeEventListener("scroll", onScroll)
+    //     }
+    // }, []);
+
+     // const onScroll = (e) => {
+    //     if (offset <= 1542) {
+    //         if (document.documentElement.scrollTop + document.documentElement.clientHeight === document.documentElement.scrollHeight && !newItemLoading) {
+    //             onAddMoreItems();
+    //         } else {
+    //             setNewItemLoading(true);
+    //         }
+    //     } else {
+    //         window.removeEventListener("scroll", onScroll);
+    //     }
+    // };
+
+    useEffect(() => {
+        console.log('didUpdate' + offset);
+        onRequest();
+    }, [offset]);
+
+    const onRequest = () => {
+        marvelService.getAllCharacters(offset)
+        .then(onCharListLoaded)
+        .catch(onError)
     }
 
-    componentWillUnmount() {
-        window.removeEventListener("scroll", this.onScroll)
+    const onError = () => {
+        setLoading(false);
+        setError(true)
     }
 
-    onRequest = () => {
-        this.marvelService.getAllCharacters(this.state.offset)
-        .then(this.onCharListLoaded)
-        .catch(this.onError)
+    const onCharListLoaded = (charListNext) => {
+        setCharList(charList.concat(charListNext));
+        setLoading(false);
+        setNewItemLoading(false);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.offset !== prevState.offset) {
-            this.onRequest();
-        }
+    const onAddMoreItems = () => {
+        setNewItemLoading(true);
+        setOffset(offset => offset + 9);
     }
 
-    onError = () => {
-        this.setState({loading: false, error: true});
-    }
-
-    onCharListLoaded = (charList) => {
-        this.setState(() => ({charList: this.state.charList.concat(charList), loading: false, newItemLoading: false}));
-    }
-
-    onAddMoreItems = () => {
-        this.setState({offset: this.state.offset + 9, newItemLoading: true});
-        
-    }
-
-    onScroll = (e) => {
-        if (this.state.offset <= 1542) {
-            if (document.documentElement.scrollTop + document.documentElement.clientHeight === document.documentElement.scrollHeight && !this.state.newItemLoading) {
-                this.onAddMoreItems();
-            }
-        } else {
-            window.removeEventListener("scroll", this.onScroll)
-        }
-    };
-
-    render() {
-
-        const {charList, loading, error, newItemLoading} = this.state;
-
-        const elements = charList.map(item => {
-            return (
-            <Item onCharSelected={this.props.onCharSelected} selected={this.props.selected} key={item.id } id={item.id} name={item.name} thumbnail={item.thumbnail}/>
-            )
-        })
-        
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? elements : null;
-
+    const elements = charList.map(item => {
         return (
-            <div className="char__list">
-                {spinner}
-                {errorMessage}
-                <ul className="char__grid">
-                    {content}
-                </ul>
-                {(newItemLoading) ? <Spinner/> :
-                <button disabled={newItemLoading} onClick={this.onAddMoreItems} style={(this.state.offset >= 1542) ? {display: 'none'} : null} className="button button__main button__long">
-                    <div className="inner">load more</div>
-                </button>
-                }
-            </div>
+        <Item onCharSelected={props.onCharSelected} selected={props.selected} key={item.id } id={item.id} name={item.name} thumbnail={item.thumbnail}/>
         )
-    }
+    })
+    
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error) ? elements : null;
+
+    return (
+        <div className="char__list">
+            {spinner}
+            {errorMessage}
+            <ul className="char__grid">
+                {content}
+            </ul>
+            {(newItemLoading) ? <Spinner/> :
+            <button disabled={newItemLoading} onClick={onAddMoreItems} style={(offset >= 1542) ? {display: 'none'} : null} className="button button__main button__long">
+                <div className="inner">load more</div>
+            </button>
+            }
+        </div>
+    )
 }
 
 const Item = (props) => {
