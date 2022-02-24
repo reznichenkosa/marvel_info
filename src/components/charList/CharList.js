@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MarvelService from '../../services/MarvelService';
+
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+
 import './charList.scss';
 
 const CharList = (props) => {
 
     const [charList, setCharList] = useState([]),
-          [loading, setLoading] = useState(true),
-          [error, setError] = useState(false),
           [newItemLoading, setNewItemLoading] = useState(false),
           [offset, setOffset] = useState(210);
 
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters} = useMarvelService();
 
     // loading content on scroll
 
@@ -24,10 +24,11 @@ const CharList = (props) => {
     //     }
     // }, []);
 
-     // const onScroll = (e) => {
-    //     if (offset <= 1542) {
-    //         if (document.documentElement.scrollTop + document.documentElement.clientHeight === document.documentElement.scrollHeight && !newItemLoading) {
+    // const onScroll = (e) => {
+    //     if (offset <= 1000) {
+    //         if (document.documentElement.scrollTop + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
     //             onAddMoreItems();
+    //             setNewItemLoading(true);
     //         } else {
     //             setNewItemLoading(true);
     //         }
@@ -36,52 +37,40 @@ const CharList = (props) => {
     //     }
     // };
 
-    useEffect(() => {
-        console.log('didUpdate' + offset);
-        onRequest();
-    }, [offset]);
+    useEffect(() => onRequest(), [offset]);
 
     const onRequest = () => {
-        marvelService.getAllCharacters(offset)
-        .then(onCharListLoaded)
-        .catch(onError)
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true)
-    }
+        getAllCharacters(offset).then(onCharListLoaded)
+    };
 
     const onCharListLoaded = (charListNext) => {
         setCharList(charList.concat(charListNext));
-        setLoading(false);
         setNewItemLoading(false);
-    }
+    };
 
     const onAddMoreItems = () => {
         setNewItemLoading(true);
         setOffset(offset => offset + 9);
-    }
+    };
 
     const elements = charList.map(item => {
         return (
         <Item onCharSelected={props.onCharSelected} selected={props.selected} key={item.id } id={item.id} name={item.name} thumbnail={item.thumbnail}/>
         )
-    })
+    });
     
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? elements : null;
+    const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="char__list">
             {spinner}
             {errorMessage}
             <ul className="char__grid">
-                {content}
+                {elements}
             </ul>
             {(newItemLoading) ? <Spinner/> :
-            <button disabled={newItemLoading} onClick={onAddMoreItems} style={(offset >= 1542) ? {display: 'none'} : null} className="button button__main button__long">
+            <button disabled={newItemLoading} onClick={onAddMoreItems} style={(offset >= 1000) ? {display: 'none'} : null} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>
             }
@@ -97,10 +86,10 @@ const Item = (props) => {
             <div className="char__name">{name}</div>
         </li>
     )
-}
+};
 
 CharList.propTypes = {
     onCharSelected: PropTypes.func
-}
+};
 
 export default CharList;

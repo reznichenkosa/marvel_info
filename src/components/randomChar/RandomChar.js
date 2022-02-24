@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import MarvelSevice from '../../services/MarvelService';
+import useMarvelSevice from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
@@ -8,11 +8,9 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = (props) => {
     
-    const [char, setChar] = useState({}),
-          [loading, setLoading] = useState(true),
-          [error, setError] = useState(false);
+    const [char, setChar] = useState({});
 
-    const marvelSevice = new MarvelSevice();
+    const {loading, error, getCharacter, clearError} = useMarvelSevice();
 
     useEffect(() => {
         updateChar();
@@ -20,25 +18,13 @@ const RandomChar = (props) => {
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-
-    const onCharLoading = (char) => {
-        setError(false);
-        setLoading(true);
     }
 
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        onCharLoading();
-        marvelSevice.getCharacter(id)
-            .then(onCharLoaded)
-            .catch(onError)
-    }
-
-    const onError = () => {
-        setError(true);
-        setLoading(false);
+        getCharacter(id)
+            .then(onCharLoaded);
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
@@ -68,10 +54,9 @@ const RandomChar = (props) => {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
-
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} style={(thumbnail.includes('image_not_available')) ? {objectFit: "unset"} : {}} alt={name} className="randomchar__img"/>
+            <img src={thumbnail} style={(thumbnail && thumbnail.includes('image_not_available')) ? {objectFit: "unset"} : {}} alt={name} className="randomchar__img"/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{(name && name.length > 24) ? name.slice(0, 20) + '...' : (name) ? name : 'not found'}</p>
                 <p className="randomchar__descr">
