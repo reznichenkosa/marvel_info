@@ -32,5 +32,38 @@
         &:hover {
             transform: translateY(-5px);
         }
+        
+        .entering {
+            opacity: .5;
+        }
+
+        .entered {
+            opacity: .5;
+        }
+
+        .exiting {
+            opacity: .5;
+        }
+
+        .exeted {
+            opacity: .5;
+        }
+        
     }
 }
+
+.my-node-enter {
+    transform:scale(0);
+
+  }
+  .my-node-enter-active {
+    transition: all 500ms;
+    transform:scale(1);
+  }
+  .my-node-exit {
+    transition: all 500ms;
+  }
+  .my-node-exit-active {
+    transform:scale(0);
+    transition: all 500mss;
+  }

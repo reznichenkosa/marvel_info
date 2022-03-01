@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition,TransitionGroup  } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -11,7 +12,8 @@ const ComicsList = () => {
 
     const [charList, setCharList] = useState([]),
           [newItemLoading, setNewItemLoading] = useState(false),
-          [offset, setOffset] = useState(0);
+          [offset, setOffset] = useState(210),
+          [animationFlag, setAnimationFlag] = useState(false);
 
     const {loading, error, getAllComics} = useMarvelService();
         
@@ -37,6 +39,8 @@ const ComicsList = () => {
     //     }
     // };
 
+    // useEffect(() => {setAnimationFlag(true)}, []);
+
     useEffect(() => onRequest(offset), [offset]);
 
     const onRequest = (off) => {
@@ -55,21 +59,25 @@ const ComicsList = () => {
     
     const elements = charList.map((item, i) => {
         return (
-            <Item key={item.id} id={item.id} name={item.name} thumbnail={item.thumbnail} price={item.price}/>
+            <CSSTransition key={i} timeout={300} classNames="my-node" >
+                <Item key={item.id} animationFlag={animationFlag} id={item.id} name={item.name} thumbnail={item.thumbnail} price={item.price}/>
+            </CSSTransition>
         )
     });
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
+    const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="comics__list">
             {spinner}
             {errorMessage}
             <ul className="comics__grid">
-                {elements}
+                <TransitionGroup component={null}>
+                    {elements}
+                </TransitionGroup>
             </ul>
-            {(newItemLoading) ? <Spinner/> :
+            {(newItemLoading) ? <div style={{margin: '6px auto 0 auto'}}><Spinner/></div> :
             <button disabled={newItemLoading} onClick={onAddMoreItems} className="button button__main button__long">
                 <div  className="inner">load more</div>
             </button>
@@ -79,16 +87,18 @@ const ComicsList = () => {
 }
 
 const Item = (props) => {
-    const {id, name, thumbnail, price} = props
-
+    const {id, name, thumbnail, price, animationFlag} = props
+    
     return (
-        <li className="comics__item">
-            <Link to={`${id}`}>
-                <img src={thumbnail} alt={name} className="comics__item-img"/>
-                <div className="comics__item-name">{name}</div>
-                <div className="comics__item-price">{price}</div>
-            </Link>
-        </li>
+        
+            <li className="comics__item">
+                <Link to={`${id}`}>
+                    <img src={thumbnail} alt={name} className="comics__item-img"/>
+                    <div className="comics__item-name">{name}</div>
+                    <div className="comics__item-price">{price}</div>
+                </Link>
+            </li>
+        
     )
 }
 

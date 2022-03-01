@@ -4,6 +4,7 @@ import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import { CSSTransition,  } from 'react-transition-group';
 
 import './charInfo.scss';
 
@@ -55,39 +56,45 @@ const CharInfo = (props) => {
 const View = ({char}) => {
 
     const {name, description, thumbnail, homepage, wiki, comics} = char;
+    const [animation, setAnimation] = useState(false);
+    useEffect(() => {
+        setAnimation((animation) => !animation)
+    }, []);
     return (
-        <>
-            <div className="char__basics">
-                <img src={thumbnail} style={(thumbnail.includes('image_not_available')) ? {objectFit: "unset"} : {}} alt={name}/>
-                <div>
-                    <div className="char__info-name">{name}</div>
-                    <div className="char__btns">
-                        <a href={homepage} className="button button__main">
-                            <div className="inner">homepage</div>
-                        </a>
-                        <a href={wiki} className="button button__secondary">
-                            <div className="inner">Wiki</div>
-                        </a>
+        <CSSTransition in={animation} timeout={1000} classNames="my-char">
+            <div>
+                <div className="char__basics">
+                    <img src={thumbnail} style={(thumbnail.includes('image_not_available')) ? {objectFit: "unset"} : {}} alt={name}/>
+                    <div>
+                        <div className="char__info-name">{name}</div>
+                        <div className="char__btns">
+                            <a href={homepage} className="button button__main">
+                                <div className="inner">homepage</div>
+                            </a>
+                            <a href={wiki} className="button button__secondary">
+                                <div className="inner">Wiki</div>
+                            </a>
+                        </div>
                     </div>
                 </div>
+                <div className="char__descr">
+                    {(description) ? description : 'Description not found'}
+                </div>
+                <div className="char__comics">Comics:</div>
+                <ul className="char__comics-list">
+                    {comics.length > 0 ? null : 'There is no comics'}
+                    {
+                        comics.map((item, i) => {
+                            return (i < 10) ? (
+                                <li key={i} className="char__comics-item">
+                                    {item.name}
+                                </li>
+                            ) : null
+                        })
+                    }
+                </ul>
             </div>
-            <div className="char__descr">
-                {(description) ? description : 'Description not found'}
-            </div>
-            <div className="char__comics">Comics:</div>
-            <ul className="char__comics-list">
-                {comics.length > 0 ? null : 'There is no comics'}
-                {
-                    comics.map((item, i) => {
-                        return (i < 10) ? (
-                            <li key={i} className="char__comics-item">
-                                {item.name}
-                            </li>
-                        ) : null
-                    })
-                }
-            </ul>
-        </>
+        </CSSTransition>
     )
 }
 

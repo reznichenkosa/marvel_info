@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition,TransitionGroup  } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -11,7 +12,7 @@ const CharList = (props) => {
 
     const [charList, setCharList] = useState([]),
           [newItemLoading, setNewItemLoading] = useState(false),
-          [offset, setOffset] = useState(210);
+          [offset, setOffset] = useState(600);
 
     const {loading, error, getAllCharacters} = useMarvelService();
 
@@ -53,9 +54,11 @@ const CharList = (props) => {
         setOffset(offset => offset + 9);
     };
 
-    const elements = charList.map(item => {
+    const elements = charList.map((item, i) => {
         return (
-        <Item onCharSelected={props.onCharSelected} selected={props.selected} key={item.id } id={item.id} name={item.name} thumbnail={item.thumbnail}/>
+            <CSSTransition key={i} timeout={300} classNames="my-node" >
+                <Item onCharSelected={props.onCharSelected} selected={props.selected} key={item.id } id={item.id} name={item.name} thumbnail={item.thumbnail}/>
+            </CSSTransition>
         )
     });
     
@@ -67,9 +70,11 @@ const CharList = (props) => {
             {spinner}
             {errorMessage}
             <ul className="char__grid">
-                {elements}
+                <TransitionGroup component={null}>
+                    {elements}
+                </TransitionGroup>
             </ul>
-            {(newItemLoading) ? <Spinner/> :
+            {(newItemLoading) ? <div style={{margin: '6px auto'}}><Spinner/></div>:
             <button disabled={newItemLoading} onClick={onAddMoreItems} style={(offset >= 1000) ? {display: 'none'} : null} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>

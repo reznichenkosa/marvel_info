@@ -44,5 +44,23 @@
         line-height: 29px;
         text-transform: uppercase;
         color: #fff;
+        text-align: center;
     }
 }
+
+
+.my-node-enter {
+    transform:scale(0);
+
+  }
+  .my-node-enter-active {
+    transition: all 500ms;
+    transform:scale(1);
+  }
+  .my-node-exit {
+    transition: all 500ms;
+  }
+  .my-node-exit-active {
+    transform:scale(0);
+    transition: all 500mss;
+  }

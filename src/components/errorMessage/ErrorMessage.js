@@ -1,4 +1,4 @@
-import imgPath from './error.gif';
+import imgPath from './ErrorMessage.jpeg';
 
 const ErrorMessage = () => {
     return (

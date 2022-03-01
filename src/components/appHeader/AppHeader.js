@@ -8,13 +8,13 @@ const AppHeader = (props) => {
             <h1 className="app__title">
                 {/* eslint-disable-next-line */}
                 <Link to={props.characters}>
-                    <span>Marvel</span> information portal
+                    <span>Marvel</span> | Information portal
                 </Link>
             </h1>
             <nav className="app__menu">
                 <ul>
-                    <li><NavLink end style={({ isActive }) => ({color: isActive ? '#9f0013' : 'inherit'})} to={props.characters}>Characters</NavLink></li>
-                    <li><NavLink style={({ isActive }) => ({color: isActive ? '#9f0013' : 'inherit'})} to={props.comics}>Comics</NavLink></li>
+                    <li><NavLink end style={({ isActive }) => ({color: isActive ? '#e62429' : 'inherit'})} to={props.characters}>Characters</NavLink></li>
+                    <li><NavLink style={({ isActive }) => ({color: isActive ? '#e62429' : 'inherit'})} to={props.comics}>Comics</NavLink></li>
                 </ul>
             </nav>
         </header>

@@ -9,6 +9,10 @@
     box-sizing: border-box;
 }
 
+body {
+    overflow-y: scroll;
+}
+
 ul,
 li,
 dl {
@@ -65,6 +69,14 @@ main {
     position: relative;
 }
 
+.otherInfo {
+    display: grid;
+    grid-template-columns: minmax(auto, auto) / minmax(auto, auto);
+    row-gap: 20px;
+    position: sticky;
+    top: 28px;
+}
+
 .pulse {
     animation: pulse 1.5s ease-in-out .5s infinite
 }
@@ -79,4 +91,83 @@ main {
     100% {
         opacity: 1
     }
+}
+.page-enter {
+    opacity: 0;
+    transition: all 500ms;
+}
+.page-enter-active {
+    opacity: 0;
+    transition: all 500ms;
+}
+.page-enter-done {
+    opacity: 1;
+    transition: all 500ms;
+}
+
+.page-exit {
+    transition: 500ms;
+    opacity: 0;
+}
+.page-exit-active {
+    transition: 500ms;
+    opacity: 0;
+}
+.page-exit-done {
+    opacity: 0;
+    transition: all 500ms;
+}
+
+
+
+.my-char-enter {
+    opacity: 0;
+    transition: all 1000ms;
+}
+.my-char-enter-active {
+    opacity: 1;
+    transition: all 1000ms;
+}
+.my-char-enter-done {
+    opacity: 1;
+    transition: all 1000ms;
+}
+.my-char-exit {
+    opacity: 1;
+    transition: all 1000ms;
+}
+.my-char-exit-active {
+    opacity: 0;
+    transition: all 1000ms;
+}
+.my-char-exit-done {
+    opacity: 0;
+    transition: all 1000ms;
+}
+
+.my-page-enter {
+    position: relative;
+    left: -1000px;
+    transition: all 1000ms;
+}
+.my-page-enter-active {
+    position: relative;
+    left: 0;
+    transition: all 1000ms;
+}
+.my-page-enter-done {
+    opacity: 1;
+    transition: all 1000ms;
+}
+.my-page-exit {
+    opacity: 1;
+    transition: all 1000ms;
+}
+.my-page-exit-active {
+    opacity: 0;
+    transition: all 1000ms;
+}
+.my-page-exit-done {
+    opacity: 0;
+    transition: all 1000ms;
 }
