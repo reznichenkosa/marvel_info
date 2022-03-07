@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CSSTransition,TransitionGroup  } from 'react-transition-group';
 
@@ -12,8 +12,7 @@ const ComicsList = () => {
 
     const [charList, setCharList] = useState([]),
           [newItemLoading, setNewItemLoading] = useState(false),
-          [offset, setOffset] = useState(210),
-          [animationFlag, setAnimationFlag] = useState(false);
+          [offset, setOffset] = useState(210);
 
     const {loading, error, getAllComics} = useMarvelService();
         
@@ -41,6 +40,7 @@ const ComicsList = () => {
 
     // useEffect(() => {setAnimationFlag(true)}, []);
 
+    // eslint-disable-next-line 
     useEffect(() => onRequest(offset), [offset]);
 
     const onRequest = (off) => {
@@ -60,7 +60,7 @@ const ComicsList = () => {
     const elements = charList.map((item, i) => {
         return (
             <CSSTransition key={i} timeout={300} classNames="my-node" >
-                <Item key={item.id} animationFlag={animationFlag} id={item.id} name={item.name} thumbnail={item.thumbnail} price={item.price}/>
+                <Item key={item.id} id={item.id} name={item.name} thumbnail={item.thumbnail} price={item.price}/>
             </CSSTransition>
         )
     });
@@ -87,7 +87,7 @@ const ComicsList = () => {
 }
 
 const Item = (props) => {
-    const {id, name, thumbnail, price, animationFlag} = props
+    const {id, name, thumbnail, price} = props
     
     return (
         

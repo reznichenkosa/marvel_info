@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { CSSTransition,TransitionGroup  } from 'react-transition-group';
 
@@ -13,7 +13,6 @@ const SingleCharacterPage = lazy(() => import('../pages/SingleCharacterPage'))
 
 const AnimatedPages = () => {
 
-    const location = useLocation();
     return (
         <main>
             <Suspense fallback={<Spinner/>}>

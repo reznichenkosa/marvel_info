@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import useMarvelSevice from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -15,6 +15,7 @@ const RandomChar = (props) => {
 
     useEffect(() => {
         updateChar();
+        // eslint-disable-next-line 
     }, []);
 
     const onCharLoaded = (char) => {

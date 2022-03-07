@@ -12,16 +12,18 @@ const CharInfo = (props) => {
     
     const [char, setChar] = useState(null);
 
-    const {loading, error, getCharacter, clearError} = useMarvelService();
+    const {process, getCharacter, clearError, setProcess } = useMarvelService();
 
     useEffect(() => {
         updateChar();
+        // eslint-disable-next-line 
     },[])
 
     useEffect(() => {
         if (props.charId) {
             updateChar();
         }
+        // eslint-disable-next-line 
     }, [props.charId])
 
     const updateChar = () => {
@@ -32,23 +34,38 @@ const CharInfo = (props) => {
         clearError();
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'))
     }
 
     const onCharLoaded = (char) => {
         setChar(char);
     }
 
-    const skeleton = char || loading || error ? null : <Skeleton/>;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char}/> : null;
+    const setContent = (process, char) => {
+        switch (process) {
+            case 'waiting':
+                return <Skeleton/>;
+            case 'loading':
+                return <Spinner/>;
+            case 'confirmed':
+                return <View char={char}/>;
+            case 'error':
+                return <ErrorMessage/>
+            default:
+                throw new Error('Unexpected process state');
+        }
+     }
+
+    // const skeleton = char || loading || error ? null : <Skeleton/>;
+    // const errorMessage = error ? <ErrorMessage/> : null;
+    // const spinner = loading ? <Spinner/> : null;
+    // const content = !(loading || error || !char) ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
-            {skeleton}
-            {errorMessage}
-            {spinner}
-            {content}
+            {
+                setContent(process, char)
+            }
         </div>
     )
 }

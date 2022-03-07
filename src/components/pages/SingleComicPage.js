@@ -7,10 +7,10 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import AppBanner from '../appBanner/AppBanner';
 import { CSSTransition,  } from 'react-transition-group';
+import {Helmet} from "react-helmet";
 
 
 import './singleComicPage.scss';
-import { boolean } from 'yup';
 
 const SingleComicPage = () => {
     
@@ -20,6 +20,7 @@ const SingleComicPage = () => {
 
     useEffect(() => {
         updateComic();
+        // eslint-disable-next-line 
     },[comicId])
 
     const updateComic = () => {
@@ -55,6 +56,11 @@ const View = ({comic}) => {
     return (
         <CSSTransition in={animation} timeout={1000} classNames="my-char">
             <div className="single-comic">
+
+                <Helmet>
+                    <title>{`Comic | ` + name}</title>
+                    <meta name={name} content={name} />
+                </Helmet>
                 <img src={thumbnail} alt={name} className="single-comic__img"/>
                 <div className="single-comic__info">
                     <h2 className="single-comic__name">{name}</h2>
